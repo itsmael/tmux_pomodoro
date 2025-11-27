@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# pomo-start MINUTES
+MINUTES=${1:-25}
+
+if ! [[ "$MINUTES" =~ ^[0-9]+$ ]]; then
+  echo "Usage: pomo-start <minutes>"
+  exit 2
+fi
+
+mkdir -p "$HOME/bin/pomodoro"
+echo "$(date +%s) $MINUTES" > "$HOME/bin/pomodoro/.pomo_state"
+
+# if tmux is running, refresh clients so status updates quickly
+if command -v tmux >/dev/null 2>&1 && tmux info >/dev/null 2>&1; then
+  tmux refresh-client -S
+fi
+
+echo "🍅 Pomodoro started for $MINUTES minutes."
+
